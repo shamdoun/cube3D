@@ -14,22 +14,6 @@ int mapValues[10][21] = {
 };
 
 
-void draw_map(mlx_image_t *img)
-{
-    //draw blocks
-    int i = 0;
-    int j;
-    while (i < 10)
-    {
-        j = 0;
-        while (j < 21)
-        {
-            draw_block(img, i * 80, j * 80, mapValues[i][j]);
-            j++; 
-        }
-        i++;
-    };
-}
 
 int get_rgba(int r, int g, int b, int a)
 {
@@ -57,6 +41,24 @@ void draw_block(mlx_image_t *img, int x, int y, int value)
         }
         i++;
     }
+}
+
+
+void draw_map(mlx_image_t *img)
+{
+    //draw blocks
+    int i = 0;
+    int j;
+    while (i < 10)
+    {
+        j = 0;
+        while (j < 21)
+        {
+            draw_block(img, i * 80, j * 80, mapValues[i][j]);
+            j++; 
+        }
+        i++;
+    };
 }
 
 void draw_direction(t_map *map, int x, int y)
@@ -142,7 +144,7 @@ void key_func(mlx_key_data_t keydata, void* param)
     else if (keydata.key == MLX_KEY_UP)
         translate_x(m->player, 1);
     else if (keydata.key == MLX_KEY_DOWN)
-        translate_x(m, -1);
+        translate_x(m->player, -1);
     update_map(m);
 }
 
