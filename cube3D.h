@@ -18,8 +18,8 @@ typedef struct mlx_v {
 } t_mlx;
 
 typedef struct player_v{
-    int x_p;
-    int y_p;
+    double x_p;
+    double y_p;
     double angle;
     int rotation_speed;
 }   t_player;

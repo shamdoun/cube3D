@@ -9,7 +9,7 @@ objs = ${srcs:.c=.o}
 
 
 %.o : %.c cube3D.h
-	${CC} ${C_FLAGS} -Iinclude -c $< -o $@  
+	${CC} ${C_FLAGS} -Iinclude -c -g $< -o $@  
 
 all : ${NAME}
 
