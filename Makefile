@@ -4,7 +4,7 @@ MLX_LIB = MLX42/build/libmlx42.a
 MLX_FLAGS = -framework Cocoa -framework OpenGL -framework IOKit
 NAME = cub3D
 
-srcs = main.c
+srcs = main.c mouvements.c render.c hooks.c drawing_algorithms.c
 objs = ${srcs:.c=.o}
 
 
