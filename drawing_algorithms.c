@@ -56,8 +56,8 @@ long	find_horizontal_distance(t_map *m, double angle)
     hit = 1;
     ay = BLOCK_L;
     ax = ay / tan_angle;
-    ax *= (angle < 90 && angle > 270 && ax < 0) ? -1 : 1;
-    ax *= (angle > 90 && angle < 270 && ax > 0) ? -1 : 1;
+    // ax *= (angle < 90 && angle > 270 && ax < 0) ? -1 : 1;
+    // ax *= (angle > 90 && angle < 270 && ax > 0) ? -1 : 1;
     printf("value of ax %f ay %f\n", ax, ay);
     // First intersection
     if (angle > 180)
