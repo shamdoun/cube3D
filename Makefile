@@ -1,5 +1,5 @@
 cc = cc
-C_FLAGS = -Werror -Wall -Wextra
+C_FLAGS = #-Werror -Wall -Wextra
 MLX_LIB = MLX42/build/libmlx42.a
 MLX_FLAGS = -framework Cocoa -framework OpenGL -framework IOKit
 NAME = cub3D
@@ -15,7 +15,7 @@ all : ${NAME}
 
 
 ${NAME}: ${objs}
-	${CC} ${objs} ${MLX_FLAGS} ${MLX_LIB} -Iinclude -lglfw -L"/Users/shamdoun/.brew/opt/glfw/lib/" -o ${NAME}
+	${CC} ${objs} ${MLX_FLAGS} ${MLX_LIB} -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.4/lib/" -o ${NAME}
 
 clean:
 	rm -fr ${objs}
@@ -23,7 +23,7 @@ clean:
 fclean: clean
 	rm -fr ${NAME}
 
-# pre:
-# 	cd MLX42 && cmake -B build && cmake --build build -j4
+pre:
+	cd MLX42 && cmake -B build && cmake --build build -j4
 
 re: fclean all

@@ -10,7 +10,7 @@ int get_rgba(int r, int g, int b, int a)
 
 void draw_direction(t_map *map, int x, int y, double angle)
 {
-    int line_length = 100; // Length of the line
+    int line_length = 402; // Length of the line
     int x1, y1;
     int dx, dy, sx, sy, err, e2;
 
@@ -116,8 +116,8 @@ void draw_player(t_map *map)
         }
     }
 
-    draw_rays(map);
-	// apply_dda_algorithm(map);
+    // draw_rays(map);
+	apply_dda_algorithm(map);
 	// while (1)
 	// {
 	// 	;
