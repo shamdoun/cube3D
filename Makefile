@@ -15,7 +15,7 @@ all : ${NAME}
 
 
 ${NAME}: ${objs}
-	${CC} ${objs} ${MLX_FLAGS} ${MLX_LIB} -Iinclude -lglfw -L"/opt/homebrew/Cellar/glfw/3.4/lib/" -o ${NAME}
+	${CC} ${objs} ${MLX_FLAGS} ${MLX_LIB} -Iinclude -lglfw -L"/Users/shamdoun/.brew/opt/glfw/lib/" -o ${NAME}
 
 clean:
 	rm -fr ${objs}
