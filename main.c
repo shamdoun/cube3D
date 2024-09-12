@@ -13,9 +13,10 @@ int mapValues[10][21] = {
     {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
-int main()
+
+void draw_2d_map()
 {
-    //creating the 2D map
+        //creating the 2D map
     t_map *map2d;
     
     //init map
@@ -61,5 +62,10 @@ int main()
     //loop
     mlx_loop(map2d->interface->mlx_ptr);
     mlx_terminate(map2d->interface->mlx_ptr);
+}
+
+int main()
+{
+    draw_2d_map();
     return (1);
 }
