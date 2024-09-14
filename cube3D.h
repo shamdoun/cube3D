@@ -32,7 +32,22 @@ typedef struct map_v{
     struct mlx_v *interface;
     int **map_values;
     struct player_v *player;
+    
 } t_map;
+
+typedef struct ray_v {
+    int distance;
+    double x;
+    struct ray_v *next;
+} t_ray;
+
+typedef struct wall_v {
+    int distance;
+    int height;
+    int wall_top;
+    int wall_bot;
+    struct wall_v *next;
+} t_wall;
 
 
 void move_right(t_player *p);
@@ -49,3 +64,6 @@ void draw_block(mlx_image_t *img, int x, int y, int value);
 void apply_dda_algorithm(t_map *m);
 void draw_player(t_map *map);
 void apply_dda_algorithm(t_map *m);
+void draw_3d_walls(t_map *m);
+void	ft_lstadd_back(t_ray **lst, t_ray *new);
+t_ray	*ft_lstnew(int content, double x);

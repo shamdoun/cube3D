@@ -14,8 +14,9 @@ void update_map(t_map *m)
 {
     mlx_delete_image(m->interface->mlx_ptr, m->interface->new_img);
     m->interface->new_img = mlx_new_image(m->interface->mlx_ptr, 21 * 80, 80 * 10);
-    draw_map(m->interface->new_img);
-    draw_player(m);
+    draw_3d_walls(m);
+    // draw_map(m->interface->new_img);
+    // draw_player(m);
     mlx_image_to_window(m->interface->mlx_ptr, m->interface->new_img, 0, 0);
 }
 
