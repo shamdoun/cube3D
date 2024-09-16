@@ -10,7 +10,7 @@ long calculate_magnitude(t_player *player, double x, double y)
     double dy = fabs(y - player->y_p);
     
     // Calculate the Euclidean distance
-    return (long)sqrt(dx * dx + dy * dy);
+    return (long)sqrt((dx * dx) + (dy * dy));
 }
 
 
@@ -180,6 +180,7 @@ long	find_vertical_distance_v1(t_map *m, t_ray **v, double angle)
 	}
     // printf("wall hit ver %f %f %f %f\n", x_inter, y_inter, floor(x_inter / 80), floor(y_inter / 80));
         (*v)->x = x_inter;
+        (*v)->bitmap_offset = (int)y_inter % 64;
 	return (calculate_magnitude(m->player, x_inter, y_inter));
 }
 
@@ -234,6 +235,7 @@ long	find_horizontal_distance_v1(t_map *m, t_ray **h, double angle)
     }
     // printf("wall hit hor %f %f %f %f\n", x_inter, y_inter, floor(x_inter / 80), floor(y_inter / 80));
     (*h)->x = x_inter;
+    (*h)->bitmap_offset = (int)x_inter % 64;
     return calculate_magnitude(m->player, x_inter, y_inter);
 }
 
@@ -310,7 +312,7 @@ void draw_3d_walls(t_map *m)
     t_ray	*v_ray;
     double a_begin = m->player->angle + 30;
     double a_end = m->player->angle - 30;
-    double steps = 60.0 / (21 * 80);
+    double steps = 60.0 / (WIDTH * 80);
     int i = 0;
     
     // printf("angle %f\n", a_begin);
@@ -318,40 +320,76 @@ void draw_3d_walls(t_map *m)
     while (a_begin > a_end)
     {
         h_ray = malloc(sizeof(t_ray));
+        h_ray->angle = a_begin;
         h_ray->next = NULL;
         v_ray = malloc(sizeof(t_ray));
+        v_ray->angle = a_begin;
         v_ray->next = NULL;
 
 		h_ray->distance = find_horizontal_distance_v1(m, &h_ray, a_begin);
 		v_ray->distance = find_vertical_distance_v1(m, &v_ray, a_begin);
         if (h_ray->distance > v_ray->distance)
+        {
+            v_ray->hit_vertical = 1;
             ft_lstadd_back(&rays, v_ray);
+        }
         else
+        {
+            h_ray->hit_vertical = 0;
             ft_lstadd_back(&rays, h_ray);
-		a_begin -= steps;
+        }
+        a_begin -= steps;
     }
 
+
     // //render all walls
+    mlx_texture_t *texture = mlx_load_png("mossystone.png");
     w = malloc(sizeof(t_wall));
     if (!w)
         exit(1);
     x = 0;
     int y;
-    int steps2 = 211 / (21 * 80); 
+    int steps2 = 211 / (21 * 80);
+    long distance_to_projection = (WIDTH * BLOCK_W / 2) / tan(FOV / 2 * (M_PI / 180));
+    // printf("value is %d\n", distance_to_projection);
     while (rays) {
         float distance = rays->distance;
-        int wall_height = 80 / distance * 100;
 
-        int wall_top = ((80 * 10) / 2) - ((wall_height / 2));
+        //fixing fish distortion
+        distance = cos((m->player->angle - rays->angle) * (M_PI / 180)) * distance;
+        
+        //wall height
+        float wall_height = (distance_to_projection * BLOCK_L) / distance;
+        
+        int wall_top = ((80 * 10) / 2) - ((wall_height /  2));
+        if (wall_top <= 0)
+            wall_top = 12;
         int wall_bot = ((80 * 10) / 2) + ((wall_height / 2));
-
+        if (wall_bot >= HEIGHT * 80)
+            wall_bot = HEIGHT * 80 - 12;
         // Draw vertical line in the image buffer
-        for (int y = wall_top; y < wall_bot; y++) {
-            // if (y >= 0 && y < 800) { // Boundary check
-                mlx_put_pixel(m->interface->new_img, x, y, get_rgba(255, 255, 255, 15));
-            // }
-        }
 
+        int color = 255;
+        // for (int t = 0; t < wall_top; t++)
+        // {   
+        //     mlx_put_pixel(m->interface->new_img, x, y, get_rgba(240, 25, 56, 200));
+        // }
+        int intensity = rays->hit_vertical ? 70 : 100;
+        for (y = 0; y < (HEIGHT * 80); y++)
+        {
+            if (y < wall_top)
+                mlx_put_pixel(m->interface->new_img, x, y, get_rgba(240, 25, 56, 200));
+
+            if (y == wall_top)
+            {
+                for (y = wall_top; y < wall_bot; y++)
+                {
+                    mlx_put_pixel(m->interface->new_img, x, y, get_rgba(color, color, color, intensity));
+                }
+            }
+            if (y > wall_top)
+               mlx_put_pixel(m->interface->new_img, x, y, get_rgba(144, 180, 169, 100));
+        }
         rays = rays->next;
         x += 1;
     }
