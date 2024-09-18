@@ -16,52 +16,52 @@ int mapValues[10][21] = {
 
 void draw_2d_map()
 {
-    //     //creating the 2D map
-    // t_map *map2d;
+        //creating the 2D map
+    t_map *map2d;
     
-    // //init map
-    // map2d = (t_map *)malloc(sizeof(t_map));
-    // if (!map2d)
-    //     exit (1);
-    // map2d->type = "2d map";
+    //init map
+    map2d = (t_map *)malloc(sizeof(t_map));
+    if (!map2d)
+        exit (1);
+    map2d->type = "2d map";
 
-    // //init map's values
-    // // map2d->map_values = malloc(sizeof(int) * 50);
-    // // if (!map2d->map_values)
-    // //     exit (1);
+    //init map's values
+    // map2d->map_values = malloc(sizeof(int) * 50);
+    // if (!map2d->map_values)
+    //     exit (1);
 
-    //  //init player
-    // map2d->player = malloc(sizeof(t_player));
-    //  if (!map2d->player)
-    //     exit (1);
-    // map2d->player->x_p = 17 * 80 + 40;
-    // map2d->player->y_p = 4 * 80 + 40;
-    // map2d->player->angle = 0;
-    // map2d->player->rotation_speed = 2;
+     //init player
+    map2d->player = malloc(sizeof(t_player));
+     if (!map2d->player)
+        exit (1);
+    map2d->player->x_p = 17 * BLOCK_W + 40;
+    map2d->player->y_p = 4 * BLOCK_L + 40;
+    map2d->player->angle = 0;
+    map2d->player->rotation_speed = 2;
 
-    // //init interface
-    // map2d->interface = malloc(sizeof(t_map));
-    // if (!map2d->interface)
-    //     exit (1);
-    // map2d->interface->mlx_ptr = mlx_init(21 *80, 10 * 80, "overall_map", false);
-    // if (!map2d->interface->mlx_ptr)
-    //     exit (1);
+    //init interface
+    map2d->interface = malloc(sizeof(t_map));
+    if (!map2d->interface)
+        exit (1);
+    map2d->interface->mlx_ptr = mlx_init(WIDTH * BLOCK_W, HEIGHT * BLOCK_L, "overall_map", false);
+    if (!map2d->interface->mlx_ptr)
+        exit (1);
     
-    // // //draw blocks
-    // map2d->interface->new_img = mlx_new_image(map2d->interface->mlx_ptr, 21 * 80, 80 * 10);
-    // draw_map(map2d->interface->new_img);
+    // //draw blocks
+    map2d->interface->new_img = mlx_new_image(map2d->interface->mlx_ptr, WIDTH * BLOCK_W, HEIGHT * BLOCK_L);
+    draw_map(map2d->interface->new_img);
     
-    // //draw player
-    // draw_player(map2d);
-	// // apply_dda_algorithm(map2d);
-    // mlx_image_to_window(map2d->interface->mlx_ptr, map2d->interface->new_img, 0, 0);
+    //draw player
+    draw_player(map2d);
+	// apply_dda_algorithm(map2d);
+    mlx_image_to_window(map2d->interface->mlx_ptr, map2d->interface->new_img, 0, 0);
 
-    // //hooks
-    // mlx_loop_hook(map2d->interface->mlx_ptr, &key_func, map2d);
+    //hooks
+    mlx_loop_hook(map2d->interface->mlx_ptr, &key_func, map2d);
     
-    // //loop
-    // mlx_loop(map2d->interface->mlx_ptr);
-    // mlx_terminate(map2d->interface->mlx_ptr);
+    //loop
+    mlx_loop(map2d->interface->mlx_ptr);
+    mlx_terminate(map2d->interface->mlx_ptr);
 }
 
 void	ft_lstadd_back(t_ray **lst, t_ray *new)
@@ -108,8 +108,8 @@ void draw_3d_map()
     map3d->player = malloc(sizeof(t_player));
      if (!map3d->player)
         exit (1);
-    map3d->player->x_p = 17 * 80 + 40;
-    map3d->player->y_p = 4 * 80 + 40;
+    map3d->player->x_p = 17 * BLOCK_W + 40;
+    map3d->player->y_p = 4 * BLOCK_L + 40;
     map3d->player->angle = 180;
     map3d->player->rotation_speed = 2;
 
@@ -117,13 +117,13 @@ void draw_3d_map()
     map3d->interface = malloc(sizeof(t_map));
     if (!map3d->interface)
         exit (1);
-    map3d->interface->mlx_ptr = mlx_init(21 *80, 10 * 80, "overall_map", false);
+    map3d->interface->mlx_ptr = mlx_init(WIDTH * BLOCK_W, HEIGHT * BLOCK_L, "overall_map", false);
     if (!map3d->interface->mlx_ptr)
         exit (1);
     
 
     // //draw blocks
-    map3d->interface->new_img = mlx_new_image(map3d->interface->mlx_ptr, 21 * 80, 80 * 10);
+    map3d->interface->new_img = mlx_new_image(map3d->interface->mlx_ptr, WIDTH * BLOCK_W, BLOCK_L * HEIGHT);
 
     //apply 3d algorithm
     // draw_map(map3d->interface->new_img);

@@ -13,7 +13,7 @@ void rotate_angle(t_player *p, int value)
 void update_map(t_map *m)
 {
     mlx_delete_image(m->interface->mlx_ptr, m->interface->new_img);
-    m->interface->new_img = mlx_new_image(m->interface->mlx_ptr, 21 * 80, 80 * 10);
+    m->interface->new_img = mlx_new_image(m->interface->mlx_ptr, WIDTH * BLOCK_W, BLOCK_L * HEIGHT);
     if (!strcmp(m->type, "3d map"))
         draw_3d_walls(m);
     else

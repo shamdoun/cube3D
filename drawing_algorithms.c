@@ -180,7 +180,7 @@ long	find_vertical_distance_v1(t_map *m, t_ray **v, double angle)
 	}
     // printf("wall hit ver %f %f %f %f\n", x_inter, y_inter, floor(x_inter / 80), floor(y_inter / 80));
         (*v)->x = x_inter;
-        (*v)->bitmap_offset = (int)y_inter % 64;
+        (*v)->bitmap_offset = y_inter;
 	return (calculate_magnitude(m->player, x_inter, y_inter));
 }
 
@@ -235,7 +235,7 @@ long	find_horizontal_distance_v1(t_map *m, t_ray **h, double angle)
     }
     // printf("wall hit hor %f %f %f %f\n", x_inter, y_inter, floor(x_inter / 80), floor(y_inter / 80));
     (*h)->x = x_inter;
-    (*h)->bitmap_offset = (int)x_inter % 64;
+    (*h)->bitmap_offset = x_inter;
     return calculate_magnitude(m->player, x_inter, y_inter);
 }
 
@@ -297,6 +297,30 @@ void apply_dda_algorithm(t_map *m)
     printf("number of rays %d\n", i);
 }
 
+
+int convertPixelColor(uint32_t color, int format) {
+    uint8_t red, green, blue, alpha;
+
+    if (format == 0) { // Assume 0 means RGBA
+        red = (color >> 24) & 0xFF;
+        green = (color >> 16) & 0xFF;
+        blue = (color >> 8) & 0xFF;
+        alpha = color & 0xFF;
+    } else if (format == 1) { // Assume 1 means BGRA
+        blue = (color >> 24) & 0xFF;
+        green = (color >> 16) & 0xFF;
+        red = (color >> 8) & 0xFF;
+        alpha = color & 0xFF;
+    } else {
+        // Handle unknown format or return color unchanged
+        return color;
+    }
+
+    // Combine back into a single pixel value in RGBA format
+    return get_rgba((int)red, (int)green, (int)blue, (int)alpha);
+}
+
+
 void draw_3d_walls(t_map *m)
 {
     int x;
@@ -312,7 +336,7 @@ void draw_3d_walls(t_map *m)
     t_ray	*v_ray;
     double a_begin = m->player->angle + 30;
     double a_end = m->player->angle - 30;
-    double steps = 60.0 / (WIDTH * 80);
+    double steps = 60.0 / (WIDTH * BLOCK_W);
     int i = 0;
     
     // printf("angle %f\n", a_begin);
@@ -343,14 +367,25 @@ void draw_3d_walls(t_map *m)
 
 
     // //render all walls
-    mlx_texture_t *texture = mlx_load_png("mossystone.png");
+    mlx_texture_t *texture = mlx_load_png("lilypad.png");
+    uint32_t *arr = (uint32_t *)texture->pixels;
+    if (!texture)
+        perror("failed to open texture!");
+    
     w = malloc(sizeof(t_wall));
     if (!w)
         exit(1);
     x = 0;
     int y;
-    int steps2 = 211 / (21 * 80);
+    // int steps2 = 211 / (21 * 80);
     long distance_to_projection = (WIDTH * BLOCK_W / 2) / tan(FOV / 2 * (M_PI / 180));
+    // for (int w = 0; w < texture->width; w++)
+    // {
+    //     for (int g = 0; g < texture->height; g++)
+    //     {
+    //         mlx_put_pixel(m->interface->new_img, g, w, arr[w * texture->width + g]);
+    //     }
+    // }
     // printf("value is %d\n", distance_to_projection);
     while (rays) {
         float distance = rays->distance;
@@ -359,14 +394,14 @@ void draw_3d_walls(t_map *m)
         distance = cos((m->player->angle - rays->angle) * (M_PI / 180)) * distance;
         
         //wall height
-        float wall_height = (distance_to_projection * BLOCK_L) / distance;
+        double wall_height = (distance_to_projection * BLOCK_L) / distance;
         
-        int wall_top = ((80 * 10) / 2) - ((wall_height /  2));
+        int wall_top = ((BLOCK_L * HEIGHT) / 2) - ((wall_height /  2));
         if (wall_top <= 0)
-            wall_top = 12;
-        int wall_bot = ((80 * 10) / 2) + ((wall_height / 2));
-        if (wall_bot >= HEIGHT * 80)
-            wall_bot = HEIGHT * 80 - 12;
+            wall_top = 0;
+        int wall_bot = ((BLOCK_L * HEIGHT) / 2) + ((wall_height / 2));
+        if (wall_bot >= HEIGHT * BLOCK_L)
+            wall_bot = HEIGHT * BLOCK_L;
         // Draw vertical line in the image buffer
 
         int color = 255;
@@ -375,16 +410,40 @@ void draw_3d_walls(t_map *m)
         //     mlx_put_pixel(m->interface->new_img, x, y, get_rgba(240, 25, 56, 200));
         // }
         int intensity = rays->hit_vertical ? 70 : 100;
-        for (y = 0; y < (HEIGHT * 80); y++)
+        double offset_x;
+        double offset_y;
+    
+        offset_x = (int)(ABS(rays->bitmap_offset) * (texture->width / BLOCK_W)) % 64;
+        if (offset_x < 0)
+            offset_x = 0;
+
+
+
+        double scaling_factor;
+        double text_pos;
+
+        scaling_factor = ((double)texture->height / wall_height);
+        // printf("scaling factor %f\n", scaling_factor);
+        for (y = 0; y < (HEIGHT * BLOCK_L); y++)
         {
             if (y < wall_top)
                 mlx_put_pixel(m->interface->new_img, x, y, get_rgba(240, 25, 56, 200));
 
             if (y == wall_top)
             {
+                offset_y = (wall_top - (HEIGHT * BLOCK_L / 2) + (wall_height / 2)) * scaling_factor;
+                if (offset_y < 0)
+                    offset_y = 0;
                 for (y = wall_top; y < wall_bot; y++)
                 {
-                    mlx_put_pixel(m->interface->new_img, x, y, get_rgba(color, color, color, intensity));
+                    // int textY = (int)offset_y & (texture->height - 1);
+                    // printf("offset x %f y %f\n", offset_x, offset_y);
+                    // printf("offset_y %f\n", offset_y);
+                    uint32_t color = arr[(int)offset_y * texture->width + (int)offset_x];
+                    // color = (color >> 1) & 8355711;
+                    mlx_put_pixel(m->interface->new_img, x, y, convertPixelColor(color, 1));
+                    offset_y += scaling_factor;
+                    // float dist = (y - wall_top) / (float)(wall_bot - wall_top);
                 }
             }
             if (y > wall_top)

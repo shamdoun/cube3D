@@ -58,12 +58,12 @@ void draw_map(mlx_image_t *img)
     //draw blocks
     int i = 0;
     int j;
-    while (i < 10)
+    while (i < HEIGHT)
     {
         j = 0;
-        while (j < 21)
+        while (j < WIDTH)
         {
-            draw_block(img, i * 80, j * 80, mapValues[i][j]);
+            draw_block(img, i * BLOCK_L, j * BLOCK_W, mapValues[i][j]);
             j++; 
         }
         i++;
