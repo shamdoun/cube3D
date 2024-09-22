@@ -301,23 +301,13 @@ void apply_dda_algorithm(t_map *m)
 int convertPixelColor(uint32_t color, int format) {
     uint8_t red, green, blue, alpha;
 
-    if (format == 0) { // Assume 0 means RGBA
-        red = (color >> 24) & 0xFF;
-        green = (color >> 16) & 0xFF;
-        blue = (color >> 8) & 0xFF;
-        alpha = color & 0xFF;
-    } else if (format == 1) { // Assume 1 means BGRA
-        blue = (color >> 24) & 0xFF;
-        green = (color >> 16) & 0xFF;
-        red = (color >> 8) & 0xFF;
-        alpha = color & 0xFF;
-    } else {
-        // Handle unknown format or return color unchanged
-        return color;
-    }
+    alpha = color >> 24;
+    blue = color >> 16 & 0xFF;
+    green = color >> 8 & 0xFF;
+    red = color & 0xFF;
 
     // Combine back into a single pixel value in RGBA format
-    return get_rgba((int)red, (int)green, (int)blue, (int)alpha);
+    return get_rgba(red, green, blue, alpha);
 }
 
 
@@ -367,11 +357,13 @@ void draw_3d_walls(t_map *m)
 
 
     // //render all walls
-    mlx_texture_t *texture = mlx_load_png("lilypad.png");
+    mlx_texture_t *texture = mlx_load_png("wood.png");
+    // printf("width %d\n", sky->width);
     uint32_t *arr = (uint32_t *)texture->pixels;
     if (!texture)
         perror("failed to open texture!");
     
+    // printf("width %d height %d\n", texture->width, texture->height);
     w = malloc(sizeof(t_wall));
     if (!w)
         exit(1);
@@ -411,27 +403,42 @@ void draw_3d_walls(t_map *m)
         // }
         int intensity = rays->hit_vertical ? 70 : 100;
         double offset_x;
+        double offset_x1;
         double offset_y;
+        double offset_y1;
     
-        offset_x = (int)(ABS(rays->bitmap_offset) * (texture->width / BLOCK_W)) % 64;
+        offset_x = (int)((rays->bitmap_offset) * (texture->width / BLOCK_W)) % (texture->width);
         if (offset_x < 0)
             offset_x = 0;
 
 
-
         double scaling_factor;
+        double y_sky;
         double text_pos;
 
         scaling_factor = ((double)texture->height / wall_height);
+        // scaling_for_sky = ((double)sky->height / (wall-));
         // printf("scaling factor %f\n", scaling_factor);
+                uint8_t start_r = 135, start_g = 206, start_b = 235; // Light blue
+                uint8_t end_r = 0, end_g = 0, end_b = 139; // Dark blue
         for (y = 0; y < (HEIGHT * BLOCK_L); y++)
         {
             if (y < wall_top)
-                mlx_put_pixel(m->interface->new_img, x, y, get_rgba(240, 25, 56, 200));
+            {
 
+                        float t = (float)y / (HEIGHT * BLOCK_L);
+
+        // Interpolate color values
+                uint8_t r = (uint8_t)(start_r + (end_r - start_r) * t);
+                uint8_t g = (uint8_t)(start_g + (end_g - start_g) * t);
+                uint8_t b = (uint8_t)(start_b + (end_b - start_b) * t);
+
+                mlx_put_pixel(m->interface->new_img, x, y, get_rgba(r,g ,b , 255));
+                // offset_y1 += scaling_for_sky;
+            } 
             if (y == wall_top)
             {
-                offset_y = (wall_top - (HEIGHT * BLOCK_L / 2) + (wall_height / 2)) * scaling_factor;
+                offset_y = ((wall_top - (HEIGHT * BLOCK_L / 2) + (wall_height / 2)) * scaling_factor);
                 if (offset_y < 0)
                     offset_y = 0;
                 for (y = wall_top; y < wall_bot; y++)
@@ -439,7 +446,7 @@ void draw_3d_walls(t_map *m)
                     // int textY = (int)offset_y & (texture->height - 1);
                     // printf("offset x %f y %f\n", offset_x, offset_y);
                     // printf("offset_y %f\n", offset_y);
-                    uint32_t color = arr[(int)offset_y * texture->width + (int)offset_x];
+                    uint32_t color = arr[((int)offset_y * texture->width) + (int)offset_x];
                     // color = (color >> 1) & 8355711;
                     mlx_put_pixel(m->interface->new_img, x, y, convertPixelColor(color, 1));
                     offset_y += scaling_factor;
@@ -447,7 +454,9 @@ void draw_3d_walls(t_map *m)
                 }
             }
             if (y > wall_top)
-               mlx_put_pixel(m->interface->new_img, x, y, get_rgba(144, 180, 169, 100));
+            {
+                mlx_put_pixel(m->interface->new_img, x, y, get_rgba(245, 222, 179, 255));
+            }
         }
         rays = rays->next;
         x += 1;
