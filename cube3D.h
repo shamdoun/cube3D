@@ -24,6 +24,36 @@ typedef struct mlx_v {
     int height;
 } t_mlx;
 
+
+typedef struct ray_calc_v
+{
+    double	x_inter;
+	double	y_inter;
+	double	ax;
+	double	ay;
+    double  angle;
+	double	tan_angle;
+	double	verif_y;
+	double	verif_x;
+}   t_ray_calc;
+
+
+typedef struct line_vector
+{
+    int line_length;
+    int x;
+    int y;
+    int x1;
+    int y1;
+    int dx;
+    int dy;
+    int sx;
+    int sy;
+    int err;
+    int e2;
+} t_line;
+
+
 typedef struct player_v{
     double x_p;
     double y_p;
@@ -75,3 +105,4 @@ void apply_dda_algorithm(t_map *m);
 void draw_3d_walls(t_map *m);
 void	ft_lstadd_back(t_ray **lst, t_ray *new);
 t_ray	*ft_lstnew(int content, double x);
+void	draw_mini_map(t_map *m);
