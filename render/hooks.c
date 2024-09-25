@@ -6,7 +6,7 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 22:13:10 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/23 22:14:41 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:22:36 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	rotate_angle(t_player *p, int value)
 	else if (p->angle < 0)
 		p->angle += 360;
 }
-
 
 void	update_map(t_map *m)
 {
