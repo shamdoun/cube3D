@@ -6,7 +6,7 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 21:38:26 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 21:49:56 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/26 12:47:52 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	draw_map(mlx_image_t *img)
 		i++;
 	}
 }
-
 
 void	draw_block(mlx_image_t *img, int x, int y, int value)
 {

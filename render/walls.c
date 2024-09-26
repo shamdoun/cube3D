@@ -6,7 +6,7 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 21:57:12 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 22:01:28 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/26 13:01:28 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ void	update_wall_values(t_wall *w, t_ray *rays, t_map *m)
 	//wall height
 	w->wall_height = (w->distance_to_projection * BLOCK_L) / w->distance;
 	w->wall_top = ((BLOCK_L * HEIGHT) / 2)
-		- ((w->wall_height /  2));
+		- ((w->wall_height / 2));
 	if (w->wall_top <= 0 || (w->wall_top > HEIGHT * BLOCK_L))
 		w->wall_top = 0;
 	w->wall_bot = ((BLOCK_L * HEIGHT) / 2) + ((w->wall_height / 2));
 	//!TODO: fix wall_bot value!
-	if (abs(w->wall_bot) >= HEIGHT * BLOCK_L)
+	if (absolute_value(w->wall_bot) >= HEIGHT * BLOCK_L)
 		w->wall_bot = HEIGHT * BLOCK_L;
 	// Draw vertical line in the image buffer
 	w->t->offset_x = (int)((rays->bitmap_offset)
@@ -44,17 +44,6 @@ void	update_wall_values(t_wall *w, t_ray *rays, t_map *m)
 		w->t->offset_x = 0;
 	w->t->scaling_factor = ((double)w->t->texture->height / w->wall_height);
 }
-
-void	init_gradient(t_gradient *gradient)
-{
-	gradient->start_r = 135;
-	gradient->start_g = 206;
-	gradient->start_b = 235;
-	gradient->end_r = 0;
-	gradient->end_g = 0;
-	gradient->end_b = 139;
-}
-
 
 void	draw_wall(t_wall *w, t_map *m, int x)
 {
@@ -73,7 +62,7 @@ void	draw_wall(t_wall *w, t_map *m, int x)
 				* w->t->texture->width) + (int)w->t->offset_x];
 		// color = (color >> 1) & 8355711;
 		mlx_put_pixel(m->interface->new_img,
-			x, y, convertPixelColor(w->t->color, 1));
+			x, y, convert_pixel_to_color(w->t->color));
 		w->t->offset_y += w->t->scaling_factor;
 		y++;
 	}

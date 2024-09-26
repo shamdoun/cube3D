@@ -6,7 +6,7 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 22:23:50 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 22:27:26 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/25 22:46:49 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	init_first_hor_inter(t_ray_calc *hor, t_map *m,
 		+ (m->player->y_p - (*y_inter)) / hor->tan_angle;
 }
 
-long	find_horizontal_distance_v1(t_map *m, t_ray **h, double angle)
+long	find_horizontal_distance(t_map *m, t_ray **h, double angle)
 {
 	double		x_inter;
 	double		y_inter;
@@ -61,12 +61,12 @@ long	find_horizontal_distance_v1(t_map *m, t_ray **h, double angle)
 		map_x = (int)floor((fabs(x_inter)) / BLOCK_W);
 		map_y = (int)floor(fabs(y_inter) / BLOCK_L);
 		if (map_x < 21 && map_y < 10
-                        && mouvement_is_blocked(map_y, map_x, angle))
+			&& mouvement_is_blocked(map_y, map_x, angle))
 			break ;
 		x_inter = x_inter + horiz->ax;
 		y_inter = y_inter + horiz->ay;
 	}
-	(*h)->x = x_inter;
-	(*h)->bitmap_offset = x_inter;
+	if (h)
+		(*h)->bitmap_offset = x_inter;
 	return (calculate_magnitude(m->player, x_inter, y_inter));
 }

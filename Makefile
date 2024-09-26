@@ -1,12 +1,12 @@
 cc = cc
-C_FLAGS = #-Werror -Wall -Wextra
+C_FLAGS = -Werror -Wall -Wextra
 MLX_LIB = MLX42/build/libmlx42.a
 MLX_FLAGS = -framework Cocoa -framework OpenGL -framework IOKit
 NAME = cub3D
 
 srcs = main.c player/mouvements.c player/player.c render/render.c render/hooks.c map/map.c map/miniMap.c \
  libft/ft_lstadd_back.c libft/ft_lstnew.c raycasting/drawing_algorithms.c render/walls.c render/rays.c \
-raycasting/horizontal_calc.c render/line.c raycasting/vertical_calc.c
+raycasting/horizontal_calc.c render/line.c raycasting/vertical_calc.c libft/min.c libft/abs.c
 objs = ${srcs:.c=.o}
 
 

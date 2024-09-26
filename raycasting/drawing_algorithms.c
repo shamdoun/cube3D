@@ -6,13 +6,11 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 20:18:30 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 22:32:08 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/25 22:47:27 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube3D.h"
-
-extern int  mapValues[10][21];
 
 void	update_angle(double *angle)
 {
@@ -51,8 +49,8 @@ void	measure_all_rays(t_map *m, t_ray **rays)
 	{
 		h_ray = ft_lstnew(a_begin);
 		v_ray = ft_lstnew(a_begin);
-		h_ray->distance = find_horizontal_distance_v1(m, &h_ray, a_begin);
-		v_ray->distance = find_vertical_distance_v1(m, &v_ray, a_begin);
+		h_ray->distance = find_horizontal_distance(m, &h_ray, a_begin);
+		v_ray->distance = find_vertical_distance(m, &v_ray, a_begin);
 		choose_closest_distance(rays, v_ray, h_ray);
 		a_begin -= steps;
 	}

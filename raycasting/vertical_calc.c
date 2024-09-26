@@ -6,13 +6,13 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 22:27:55 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 22:28:49 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/25 22:46:25 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cube3D.h"
 
-void initialise_params_for_vert_calc(t_ray_calc *vertical, double angle)
+void	initialise_params_for_vert_calc(t_ray_calc *vertical, double angle)
 {
 	vertical->tan_angle = tan(angle * (M_PI / 180));
 	vertical->verif_x = angle > 90 && angle < 270;
@@ -46,7 +46,7 @@ void	init_first_vertical_inter(t_ray_calc *vertical, t_map *m,
 		+ ((m->player->x_p - (*x_inter)) * tan(vertical->angle * (M_PI / 180)));
 }
 
-long	find_vertical_distance_v1(t_map *m, t_ray **v, double angle)
+long	find_vertical_distance(t_map *m, t_ray **v, double angle)
 {
 	double		x_inter;
 	double		y_inter;	
@@ -62,12 +62,13 @@ long	find_vertical_distance_v1(t_map *m, t_ray **v, double angle)
 	{
 		map_x = (int)floor(fabs(x_inter) / BLOCK_W);
 		map_y = (int)floor(fabs(y_inter) / BLOCK_L);
-		if (map_x < 21 && map_y < 10 && mouvement_is_blocked(map_y, map_x, angle))
+		if (map_x < 21 && map_y < 10
+			&& mouvement_is_blocked(map_y, map_x, angle))
 			break ;
 		x_inter = x_inter + vertical->ax;
 		y_inter = y_inter + vertical->ay;
 	}
-	(*v)->x = x_inter;
-	(*v)->bitmap_offset = y_inter;
+	if (v)
+		(*v)->bitmap_offset = y_inter;
 	return (calculate_magnitude(m->player, x_inter, y_inter));
 }

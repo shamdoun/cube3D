@@ -6,7 +6,7 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 19:32:54 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 21:48:19 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/26 12:47:36 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	init_map_values(t_map *map3d)
 	map3d->interface->new_img = mlx_new_image(map3d->interface->mlx_ptr,
 			WIDTH * BLOCK_W, BLOCK_L * HEIGHT);
 }
-
 
 void	draw_3d_map(void)
 {

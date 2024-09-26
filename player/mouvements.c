@@ -6,7 +6,7 @@
 /*   By: shamdoun <shamdoun@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 13:52:59 by shamdoun          #+#    #+#             */
-/*   Updated: 2024/09/25 22:16:34 by shamdoun         ###   ########.fr       */
+/*   Updated: 2024/09/26 12:48:29 by shamdoun         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,16 @@ int	mouvement_is_blocked(int map_y, int map_x, double angle)
 {
 	if (mapValues[map_y][map_x] == 1 || (!ray_is_facing_down(angle)
 			&& ray_is_facing_left(angle) && (mapValues[map_y][map_x + 1] == 1
-					&& mapValues[map_y + 1][map_x] == 1) ||
-		!ray_is_facing_down(angle) && !ray_is_facing_left(angle)
+					&& mapValues[map_y + 1][map_x] == 1)) ||
+		(!ray_is_facing_down(angle) && !ray_is_facing_left(angle)
 				&& (mapValues[map_y][map_x - 1] == 1
 				&& mapValues[map_y + 1][map_x] == 1)) ||
-		ray_is_facing_down(angle) && ray_is_facing_left(angle)
+		(ray_is_facing_down(angle) && ray_is_facing_left(angle)
 				&& (mapValues[map_y][map_x + 1] == 1
-				&& mapValues[map_y - 1][map_x] == 1))
+				&& mapValues[map_y - 1][map_x] == 1)))
 		return (1);
 	return (0);
 }
-
 
 void	move_up(t_player *p)
 {
